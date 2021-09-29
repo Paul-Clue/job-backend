@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  firstInt: MyString
+  operation: MyString
+  secondInt: MyString
+  result: MyString
+
+two:
+  firstInt: MyString
+  operation: MyString
+  secondInt: MyString
+  result: MyString
