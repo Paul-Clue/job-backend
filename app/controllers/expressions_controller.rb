@@ -3,7 +3,12 @@ class ExpressionsController < ApplicationController
   before_action :set_user, only: %i[show update]
 
   def expression
+    @add = '+'
+    @subtract = '-'
+    @multiply = '*'
+    @divide = '/'
 
+    switch
   end
 
   def show
