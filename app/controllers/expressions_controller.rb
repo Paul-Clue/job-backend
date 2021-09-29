@@ -3,12 +3,21 @@ class ExpressionsController < ApplicationController
   before_action :set_user, only: %i[show update]
 
   def expression
-    @add = '+'
-    @subtract = '-'
-    @multiply = '*'
-    @divide = '/'
+    @firstInt = params[:firstInt].to_i 
+    @secondInt = param[:secondInt].to_i 
 
-    switch
+    case params[:operation]
+    when '+'
+      @sum = @firsInt+@secondInt
+    when '-'
+      @difference = @firstInt-@secondInt
+    when '*'
+      @product = @firsInt*@secondInt
+    when '/'
+      @quotient = @firsInt/@secondInt
+    else
+      puts 'Only single-digit numbers are allowed'
+    end
   end
 
   def show
