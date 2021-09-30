@@ -1,63 +1,66 @@
+# rubocop:disable all
 class ExpressionsController < ApplicationController
   skip_before_action :verify_authenticity_token, raise: false
   before_action :set_user, only: %i[show update]
 
   def expression
-    @firstInt = params[:firstInt].to_i
-    @secondInt = param[:secondInt].to_i
-
-    case params[:operation]
-    when '+'
-      @sum = @firsInt+@secondInt
-      @express = Expression.create(firstInt: params[:firstInt], operator: params[operator], secondInt: params[secondInt], result: @sum)
-      if @express.save
-        render json: { Expression: ExpressionSerializer.new(@express) }, status: :created
-      # render json: @user, status: :created
-      else
-        render json: { error: 'failed to calculate expression' }, status: :unauthorized
-      end
-    when '-'
-      @difference = @firsInt-@secondInt
-      @express = Expression.create(firstInt: params[:firstInt], operator: params[operator], secondInt: params[secondInt], result: @difference)
-      if @express.save
-        render json: { Expression: ExpressionSerializer.new(@express) }, status: :created
-      # render json: @user, status: :created
-      else
-        render json: { error: 'failed to calculate expression' }, status: :unauthorized
-      end
-    when '*'
-      @product = @firsInt*@secondInt
-      @express = Expression.create(firstInt: params[:firstInt], operator: params[operator], secondInt: params[secondInt], result: @product)
-      if @express.save
-        render json: { Expression: ExpressionSerializer.new(@express) }, status: :created
-      # render json: @user, status: :created
-      else
-        render json: { error: 'failed to calculate expression' }, status: :unauthorized
-      end
-    when '/'
-      @quotient = @firsInt/@secondInt
-      @express = Expression.create(firstInt: params[:firstInt], operator: params[operator], secondInt: params[secondInt], result: @quotient)
-      if @express.save
-        render json: { Expression: ExpressionSerializer.new(@express) }, status: :created
-      # render json: @user, status: :created
-      else
-        render json: { error: 'failed to calculate expression' }, status: :unauthorized
-      end
+    if params[:firstInt] == '' || params[:secondInt] == ''
+      render json: { error: 'Please fill in all fields!' }, status: :unauthorized
     else
-      render json: { error: 'failed to calculate expression' }, status: :unauthorized
+      @first_Int = params[:firstInt].to_i
+      @second_Int = params[:secondInt].to_i
+
+      case params[:operation]
+      when '+'
+        @sum = @first_Int + @second_Int
+        @express = Expression.new(user_params)
+        @express.result = @sum
+        if @express.save
+          render json: { Expression: ExpressionSerializer.new(@express) }, status: :created
+        else
+          render json: { error: 'failed to calculate expression' }, status: :unauthorized
+        end
+      when '-'
+        @difference = @first_Int - @second_Int
+        @express = Expression.new(user_params)
+        @express.result = @difference
+        if @express.save
+          render json: { Expression: ExpressionSerializer.new(@express) }, status: :created
+        else
+          render json: { error: 'failed to calculate expression' }, status: :unauthorized
+        end
+      when '*'
+        @product = @first_Int * @second_Int
+        @express = Expression.new(user_params)
+        @express.result = @product
+        if @express.save
+          render json: { Expression: ExpressionSerializer.new(@express) }, status: :created
+        else
+          render json: { error: 'failed to calculate expression' }, status: :unauthorized
+        end
+      when '/'
+        @quotient = @first_Int / @second_Int
+        @express = Expression.new(user_params)
+        @express.result = @quotient
+
+        if @express.save
+          render json: { Expression: ExpressionSerializer.new(@express) }, status: :created
+        else
+          render json: { error: 'failed to calculate expression' }, status: :unauthorized
+        end
+      else
+        render json: { error: 'Please select an operator!' }, status: :unauthorized
+      end
     end
   end
 
-  def show
-  end
+  def show; end
 
-  def update
-  end
+  def update; end
 
   private
 
   def user_params
-    params.require(:expression).permit(:firstInd, :operation, :secondInt)
-    # params.permit(:firstInd, :operation, :secondInt)
+    params.permit(:firstInt, :operation, :secondInt)
   end
 end
